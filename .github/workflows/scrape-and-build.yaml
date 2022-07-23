@@ -1,0 +1,30 @@
+name: Scrape Powershell doc and build docset
+on: workflow_dispatch
+jobs:
+  scrape-and-build:
+    env:
+      ARTIFACT_NAME: posh-docsets.zip
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: install deps
+      run: pip install selenium requests bs4
+    - name: scrape doc
+      run: |
+        cd ${{ github.workspace }}
+        mkdir -p Powershell
+
+        python3 posh-to-dash.py --temporary --output=Powershell/versions/7.2/Powershell.tgz --version=7.2
+
+        cp static/icon.png Powershell/icon.png
+        cp static/icon@2x.png Powershell/icon@2x.png
+        cp Powershell/versions/7.1/Powershell.tgz Powershell/Powershell.tgz
+
+        cp static/docset-template/README.md Powershell/README.md
+        python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=$ARTIFACT_VER
+        zip -r $ARTIFACT_NAME Powershell
+    - name: upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.ARTIFACT_NAME }}
+        path: ${{ github.workspace }}/Powershell.zip
