@@ -2,8 +2,6 @@ name: Scrape Powershell doc and build docset
 on: workflow_dispatch
 jobs:
   scrape-and-build:
-    env:
-      ARTIFACT_NAME: posh-docsets.zip
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -22,9 +20,8 @@ jobs:
 
         cp static/docset-template/README.md Powershell/README.md
         python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=$ARTIFACT_VER
-        zip -r $ARTIFACT_NAME Powershell
     - name: upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.ARTIFACT_NAME }}
-        path: ${{ github.workspace }}/Powershell.zip
+        name: powershell-docset-7.2.5
+        path: ${{ github.workspace }}/Powershell/
