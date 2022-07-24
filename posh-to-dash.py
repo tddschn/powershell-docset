@@ -251,8 +251,6 @@ def download_module_contents(
             }
         )
 
-        break
-
     module_infos = {
         'name': module_name,
         'index': os.path.relpath(module_filepath, root_dir),
@@ -311,7 +309,6 @@ def crawl_posh_contents(
             download_dir,
         )
         content_toc[module_name] = module_infos
-        break
 
     return content_toc
 
