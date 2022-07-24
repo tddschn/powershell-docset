@@ -2,9 +2,9 @@
 
 Based on [lucasg](https://github.com/lucasg)'s [powershell-docset](https://github.com/lucasg/powershell-docset).
 
-Added support for running on GitHub actions and local dependency installation via `poetry`.
-
-Updated the default Powershell documentation version to 7.2.
+Major Changes:
+- Added support for running on GitHub actions and local dependency installation via `poetry`.
+- Updated the default Powershell documentation version to 7.2.
 
 ### Status
 
