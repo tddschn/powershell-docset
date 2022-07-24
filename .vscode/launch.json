@@ -1,15 +1,20 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Python: posh-to-dash",
-            "type": "python",
-            "request": "launch",
-            "program": "posh-to-dash.py",
-            "args": ["--verbose", "--temporary", "--output=Powershell/versions/7.2/Powershell.tgz", "--version=7.2"],
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "preLaunchTask": "posh-to-dash cleanup"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: posh-to-dash",
+      "type": "python",
+      "request": "launch",
+      "program": "posh-to-dash.py",
+      "args": [
+        "--verbose",
+        "--temporary",
+        "--output=Powershell/versions/7.2/Powershell.tgz",
+        "--version=7.2"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "preLaunchTask": "posh-to-dash cleanup"
+    }
+  ]
 }

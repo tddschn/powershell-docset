@@ -1,5 +1,4 @@
 import os
-import shutil
 import argparse
 from datetime import datetime
 
@@ -8,16 +7,19 @@ docset_json = """{
     "version": "%s/%s",
     "archive": "Powershell.tgz",
     "author": {
-        "name": "lucasg",
-        "link": "https://github.com/lucasg"
+        "name": "tddschn",
+        "link": "https://github.com/tddschn"
     },
     "aliases": ["Windows shell",
-                "posh",
+                "pwsh",
                 "Cmdlets",
                 "Windows automation"],
 
     "specific_versions": [
-
+        {
+        "version": "7.2",
+        "archive": "versions/7.2/Powershell.tgz"
+        },
         { 
             "version": "6",
             "archive": "versions/6/Powershell.tgz",
