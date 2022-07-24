@@ -8,7 +8,7 @@ Updated the default Powershell documentation version to 7.2.
 
 ### Status
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftddschn%2Fpowershell-docset%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/tddschn/powershell-docset/goto?ref=master)
+[![Scrape Powershell doc and build docset](https://github.com/tddschn/powershell-docset/actions/workflows/scrape-and-build.yaml/badge.svg)](https://github.com/tddschn/powershell-docset/actions/workflows/scrape-and-build.yaml)
 <!-- [![Build Status](https://travis-ci.org/lucasg/powershell-docset.svg?branch=master)](https://travis-ci.org/lucasg/powershell-docset) -->
 
 `posh-to-dash.py` scrapes the newly announced `https://docs.microsoft.com/en-us/powershell/module/` website in order to create an offline dash-compatible archive to be viewed in `Dash`, `Zeal` or `Velocity` :
