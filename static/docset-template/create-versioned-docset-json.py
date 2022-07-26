@@ -4,7 +4,7 @@ from datetime import datetime
 
 docset_json = """{
     "name": "Powershell",
-    "version": "%s/%s",
+    "version": "%s",
     "archive": "Powershell.tgz",
     "author": {
         "name": "tddschn",
@@ -63,6 +63,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with open(args.output, "w") as out:
-        date = datetime.strftime(datetime.utcnow(), "%y-%m-%d")
+        # date = datetime.strftime(datetime.utcnow(), "%y-%m-%d")
         version = args.version.lstrip("v")
-        out.write(docset_json % (version, date))
+        # out.write(docset_json % (version, date))
+        out.write(docset_json % version)

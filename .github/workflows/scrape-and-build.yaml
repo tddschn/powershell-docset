@@ -19,7 +19,7 @@ jobs:
           cp Powershell/versions/7.2/Powershell.tgz Powershell/Powershell.tgz
 
           cp static/docset-template/README.md Powershell/README.md
-          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=$ARTIFACT_VER
+          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=7.2
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
