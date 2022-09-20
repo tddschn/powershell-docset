@@ -106,7 +106,7 @@ class Configuration:
         # selected powershell api version
         self.powershell_version = args.version
 
-        # The modules and cmdlets pages are "versionned" using additional params in the GET request
+        # The modules and cmdlets pages are "versioned" using additional params in the GET request
         self.powershell_version_param = "view=powershell-{0:s}".format(
             self.powershell_version
         )

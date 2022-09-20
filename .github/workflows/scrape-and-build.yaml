@@ -1,5 +1,12 @@
 name: Scrape Powershell doc and build docset
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      powershell-version:
+        description: "Powershell version"
+        required: false
+        default: "7.2.6"
+
 jobs:
   scrape-and-build:
     runs-on: ubuntu-latest
@@ -9,26 +16,36 @@ jobs:
         run: pip install selenium requests bs4
       - name: scrape doc
         run: |
-          cd ${{ github.workspace }}
+          TAG_MINOR="$(echo '${{inputs.powershell-version }}' | cut -d'.' -f1,2)"
           mkdir -p Powershell
 
-          python3 posh-to-dash.py --temporary --output=Powershell/versions/7.2/Powershell.tgz --version=7.2
+          python3 posh-to-dash.py --temporary --output=Powershell/versions/${TAG_MINOR}/Powershell.tgz --version=${TAG_MINOR}
 
           cp static/icon.png Powershell/icon.png
           cp static/icon@2x.png Powershell/icon@2x.png
-          cp Powershell/versions/7.2/Powershell.tgz Powershell/Powershell.tgz
+          cp Powershell/versions/${TAG_MINOR}/Powershell.tgz Powershell/Powershell.tgz
 
           cp static/docset-template/README.md Powershell/README.md
-          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=7.2
+          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=${TAG_MINOR}
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: powershell-docset-7.2.5
-          path: ${{ github.workspace }}/Powershell/
+          name: "powershell-docset-${{ inputs.powershell-version }}"
+          retention-days: 3
+          path: |
+            Powershell
       - name: release docset
-        run: |
-          cd ${{ github.workspace }}
-          zip -r Powershell.zip Powershell
-          gh release create v7.2.5 ./Powershell.zip
+        shell: bash
         env:
+          TAG: "${{ inputs.powershell-version }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ZIP_FILENAME="Powershell-docset-v${TAG}.zip"
+          zip -r "${ZIP_FILENAME}" Powershell
+
+          set +e
+          # don't exit on error
+          gh release create "v${TAG}" --notes "Release from GitHub Actions"
+          set -e
+
+          gh release upload "v${TAG}" "${ZIP_FILENAME}"
