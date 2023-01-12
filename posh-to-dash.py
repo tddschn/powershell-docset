@@ -31,6 +31,17 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 
 
+class VersionMinor:
+    def __init__(self, version: str) -> None:
+        if not self.validate_version_minor(str(version)):
+            raise ValueError("Invalid version minor string: %s" % version)
+        self.version = str(version)
+
+    def validate_version_minor(self, version: str) -> bool:
+        """Validate a version string like 5.1 or 6.2"""
+        return re.match(r"^\d+\.\d+$", version) is not None
+
+
 class PoshWebDriver:
     """Thin wrapper for selenium webdriver for page content retrieval"""
 
@@ -104,7 +115,7 @@ class Configuration:
     def __init__(self, args):
 
         # selected powershell api version
-        self.powershell_version = args.version
+        self.powershell_version = args.version.version
 
         # The modules and cmdlets pages are "versioned" using additional params in the GET request
         self.powershell_version_param = "view=powershell-{0:s}".format(
@@ -782,9 +793,10 @@ if __name__ == '__main__':
     parser.add_argument(
         "-v",
         "--version",
-        help="select powershell API versions",
-        default="7.2",
-        choices=["5.1", "7.2", "7.3"],  # LTS  # pre-release
+        help="select powershell API versions like 7.3, do not include the patch version",
+        type=VersionMinor,
+        # default="7.2",
+        # choices=["5.1", "7.2", "7.3"],  # LTS  # pre-release
     )
 
     parser.add_argument(
