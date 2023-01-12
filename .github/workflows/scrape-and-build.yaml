@@ -11,7 +11,7 @@ jobs:
   scrape-and-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install deps
         run: pip install selenium requests bs4
       - name: scrape doc
