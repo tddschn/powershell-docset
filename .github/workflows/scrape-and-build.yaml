@@ -5,7 +5,8 @@ on:
       powershell-version:
         description: "Powershell version"
         required: false
-        default: "7.3.1"
+        default: "latest"
+        # default: "7.3.1"
 
 jobs:
   scrape-and-build:
@@ -15,29 +16,39 @@ jobs:
       - name: install deps
         run: pip install selenium requests bs4
       - name: scrape doc
+        id: scrape-doc
+        shell: bash
         run: |
-          TAG_MINOR="$(echo '${{inputs.powershell-version }}' | cut -d'.' -f1,2)"
+          if [[ '${{ inputs.powershell-version }}'='latest' ]]; then
+            TAG_PATCH="$(curl https://formulae.brew.sh/api/cask/powershell.json | jq -r '.version')"
+          else
+            TAG_PATCH="${{ inputs.powershell-version }}"
+          fi
+          TAG_MINOR="$(echo "${TAG_PATCH}" | cut -d'.' -f1,2)"
+          echo "TAG_PATCH=${TAG_PATCH}" >> "$GITHUB_OUTPUT"
+          echo "TAG_MINOR=${TAG_MINOR}" >> "$GITHUB_OUTPUT"
+
           mkdir -p Powershell
 
-          python3 posh-to-dash.py --temporary --output=Powershell/versions/${TAG_MINOR}/Powershell.tgz --version=${TAG_MINOR}
+          python3 posh-to-dash.py --temporary --output="Powershell/versions/${TAG_MINOR}/Powershell.tgz" --version="${TAG_MINOR}"
 
           cp static/icon.png Powershell/icon.png
           cp static/icon@2x.png Powershell/icon@2x.png
-          cp Powershell/versions/${TAG_MINOR}/Powershell.tgz Powershell/Powershell.tgz
+          cp "Powershell/versions/${TAG_MINOR}/Powershell.tgz" Powershell/Powershell.tgz
 
           cp static/docset-template/README.md Powershell/README.md
-          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version=${TAG_MINOR}
+          python3 static/docset-template/create-versioned-docset-json.py --output=Powershell/docset.json --version="${TAG_MINOR}"
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: "powershell-docset-${{ inputs.powershell-version }}"
+          name: "powershell-docset-${{ steps.scrape-doc.outputs.TAG_PATCH }}"
           retention-days: 3
           path: |
             Powershell
       - name: release docset
         shell: bash
         env:
-          TAG: "${{ inputs.powershell-version }}"
+          TAG: "${{ steps.scrape-doc.outputs.TAG_PATCH }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ZIP_FILENAME="Powershell-docset-v${TAG}.zip"
