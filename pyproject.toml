@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Teddy Xinyuan Chen <45612704+tddschn@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "powershell_docset"}]
+packages = []
+# packages = [{include = "powershell_docset"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
